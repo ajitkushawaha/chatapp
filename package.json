@@ -1,19 +1,45 @@
 {
-  "name": "wp-node--test",
-  "version": "1.0.0",
-  "main": "index.js",
+  "name": "whatsapp-chat-nextjs",
+  "version": "0.1.0",
+  "private": true,
   "scripts": {
-    "start": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "node server.js",
+    "webhook": "node webhook-server.js",
+    "dev:full": "concurrently \"npm run dev\" \"npm run webhook\"",
+    "build": "next build",
+    "start": "NODE_ENV=production node server.js",
+    "start:webhook": "NODE_ENV=production node webhook-server.js",
+    "start:full": "concurrently \"npm run start\" \"npm run start:webhook\"",
+    "start:production": "pm2 start ecosystem.config.js",
+    "stop:production": "pm2 stop all",
+    "restart:production": "pm2 restart all",
+    "deploy": "npm run build && pm2 restart all",
+    "logs": "pm2 logs",
+    "docker:build": "docker build -t whatsapp-chat .",
+    "docker:run": "docker-compose up -d",
+    "docker:stop": "docker-compose down",
+    "lint": "eslint"
   },
-  "author": "",
-  "license": "ISC",
-  "description": "",
   "dependencies": {
-    "axios": "^1.7.3",
-    "body-parser": "^1.20.2",
-    "express": "^4.19.2",
-    "nodemon": "^3.1.4",
-    "socket.io": "^4.7.5"
+    "axios": "^1.11.0",
+    "concurrently": "^8.2.2",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "next": "15.5.2",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.1"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "15.5.2",
+    "tailwindcss": "^4",
+    "typescript": "^5"
   }
 }
