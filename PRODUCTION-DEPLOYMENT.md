@@ -69,16 +69,6 @@ npm install -g pm2
 {
   "apps": [
     {
-      "name": "whatsapp-webhook",
-      "script": "webhook-server.js",
-      "instances": 1,
-      "exec_mode": "cluster",
-      "env": {
-        "NODE_ENV": "production",
-        "PORT": 3001
-      }
-    },
-    {
       "name": "whatsapp-chat",
       "script": "server.js",
       "instances": 2,
@@ -156,7 +146,6 @@ htop
 {
   "scripts": {
     "start": "NODE_ENV=production node server.js",
-    "start:webhook": "NODE_ENV=production node webhook-server.js",
     "start:production": "pm2 start ecosystem.config.json",
     "build": "next build",
     "deploy": "npm run build && pm2 restart all"

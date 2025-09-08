@@ -33,20 +33,18 @@ COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 
-# Copy webhook server
-COPY --from=builder /app/webhook-server.js ./
+# Copy package.json
 COPY --from=builder /app/package.json ./
 
-# Install production dependencies for webhook server
+# Install production dependencies
 RUN npm ci --only=production && npm cache clean --force
 
 USER nextjs
 
 EXPOSE 3000
-EXPOSE 3001
 
 ENV PORT 3000
 ENV HOSTNAME "0.0.0.0"
 
-# Start both servers
-CMD ["sh", "-c", "node webhook-server.js & node server.js"]
+# Start the main server
+CMD ["node", "server.js"]

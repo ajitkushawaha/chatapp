@@ -15,33 +15,27 @@ async function getAIResponse(message: string, contactName: string): Promise<stri
   return await getKeywordResponse(message);
 }
 
-// Flow and keyword-based response system
+// Keyword-based fallback system with custom keywords from database
 async function getKeywordResponse(message: string): Promise<string> {
   const lowerMessage = message.toLowerCase();
   
   try {
-    // First, check flows from database
-    const flowsResponse = await fetch(`${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/api/flows`);
-    const flowsData = await flowsResponse.json();
+    // Get custom keywords from database
+    const response = await fetch(`${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/api/keywords`);
+    const data = await response.json();
     
-    if (flowsData.success && flowsData.flows && flowsData.flows.length > 0) {
-      // Check active flows first
-      for (const flow of flowsData.flows) {
-        if (flow.isActive && flow.triggers && flow.triggers.length > 0) {
-          for (const trigger of flow.triggers) {
-            if (lowerMessage.includes(trigger.toLowerCase())) {
-              console.log(`Flow match: "${trigger}" from flow "${flow.name}"`);
-              return flow.response;
-            }
-          }
+    if (data.success && data.keywords && data.keywords.length > 0) {
+      // Check custom keywords first
+      for (const keyword of data.keywords) {
+        if (keyword.isActive && lowerMessage.includes(keyword.keyword.toLowerCase())) {
+          console.log(`Custom keyword match: "${keyword.keyword}"`);
+          return keyword.response;
         }
       }
     }
   } catch (error) {
-    console.error('Error fetching flows:', error);
+    console.error('Error fetching custom keywords:', error);
   }
-
-  // Custom keywords removed - using Flow Builder instead
 
   // Fallback to default Klance Marketing Agency responses
   const keywordResponses: { [key: string]: string } = {
