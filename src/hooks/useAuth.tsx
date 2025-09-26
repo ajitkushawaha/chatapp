@@ -1,20 +1,23 @@
 'use client';
 
 import { useState, useEffect, createContext, useContext, ReactNode } from 'react';
-import { User, onAuthStateChanged } from 'firebase/auth';
+import { User, onAuthStateChanged, signOut } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { UserProfile, getUserProfile } from '@/lib/auth';
+import { useRouter } from 'next/navigation';
 
 interface AuthContextType {
   user: User | null;
   userProfile: UserProfile | null;
   loading: boolean;
+  logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
   userProfile: null,
   loading: true,
+  logout: async () => {},
 });
 
 export const useAuth = () => {
@@ -33,6 +36,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -56,10 +60,22 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     return () => unsubscribe();
   }, []);
 
+  const logout = async () => {
+    try {
+      await signOut(auth);
+      setUser(null);
+      setUserProfile(null);
+      router.push('/auth/login');
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
+  };
+
   const value = {
     user,
     userProfile,
     loading,
+    logout,
   };
 
   return (

@@ -29,6 +29,16 @@ export default function FlowBuilder({ flow, onUpdateFlow, onClose }: FlowBuilder
   const [newTrigger, setNewTrigger] = useState('');
   const [hasChanges, setHasChanges] = useState(false);
 
+  // Update form when flow prop changes
+  useEffect(() => {
+    setName(flow.name);
+    setTriggers(flow.triggers);
+    setResponse(flow.response);
+    setIsActive(flow.isActive);
+    setNewTrigger('');
+    setHasChanges(false);
+  }, [flow.id]); // Only update when flow ID changes
+
   useEffect(() => {
     const hasChanges = 
       name !== flow.name ||
@@ -99,7 +109,8 @@ export default function FlowBuilder({ flow, onUpdateFlow, onClose }: FlowBuilder
             </div>
             <div>
               <h2 className="text-lg font-semibold text-gray-900">Flow Builder</h2>
-              <p className="text-sm text-gray-600">Configure your automated conversation flow</p>
+              <p className="text-sm text-gray-600">Editing: <span className="font-medium text-green-600">{flow.name}</span></p>
+              <p className="text-xs text-gray-500 mt-1">Status: <span className={`font-medium ${flow.isActive ? 'text-green-600' : 'text-red-600'}`}>{flow.isActive ? 'Active' : 'Inactive'}</span></p>
             </div>
           </div>
           <div className="flex items-center space-x-2">

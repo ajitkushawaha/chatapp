@@ -2,6 +2,7 @@ const { createServer } = require('http');
 const { parse } = require('url');
 const next = require('next');
 const { Server } = require('socket.io');
+require('dotenv').config({ path: 'env.local' });
 
 const dev = process.env.NODE_ENV !== 'production';
 const hostname = 'localhost';
