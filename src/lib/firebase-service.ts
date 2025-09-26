@@ -1,6 +1,11 @@
 import { initializeApp, getApps, cert } from 'firebase-admin/app';
 import { getFirestore, Timestamp } from 'firebase-admin/firestore';
 
+// Load environment variables for server-side operations
+if (typeof window === 'undefined') {
+  require('dotenv').config({ path: 'env.local' });
+}
+
 // Initialize Firebase Admin SDK
 let firebaseInitialized = false;
 let firebaseError: string | null = null;
@@ -16,11 +21,28 @@ async function initializeFirebase() {
   }
 
   try { 
+    // Ensure environment variables are loaded
+    if (typeof window === 'undefined') {
+      require('dotenv').config({ path: '.env.local' });
+    }
+    
+    console.log('🔍 Debug Firebase Environment Variables:');
+    console.log('FIREBASE_ADMIN_PROJECT_ID:', process.env.FIREBASE_ADMIN_PROJECT_ID ? 'SET' : 'NOT SET');
+    console.log('FIREBASE_ADMIN_CLIENT_EMAIL:', process.env.FIREBASE_ADMIN_CLIENT_EMAIL ? 'SET' : 'NOT SET');
+    console.log('FIREBASE_ADMIN_PRIVATE_KEY:', process.env.FIREBASE_ADMIN_PRIVATE_KEY ? 'SET' : 'NOT SET');
+    
+    // Use hardcoded values for testing
     const serviceAccount = {
-      projectId: process.env.FIREBASE_ADMIN_PROJECT_ID,
-      clientEmail: process.env.FIREBASE_ADMIN_CLIENT_EMAIL,
+      projectId: 'leadgenarator-dfe18',
+      clientEmail: 'firebase-adminsdk-fbsvc@leadgenarator-dfe18.iam.gserviceaccount.com',
       privateKey: process.env.FIREBASE_ADMIN_PRIVATE_KEY?.replace(/\\n/g, '\n'),
     };
+    
+    console.log('🔍 Service Account Debug:');
+    console.log('Project ID:', serviceAccount.projectId);
+    console.log('Client Email:', serviceAccount.clientEmail);
+    console.log('Private Key starts with:', serviceAccount.privateKey?.substring(0, 50));
+    console.log('Private Key ends with:', serviceAccount.privateKey?.substring(serviceAccount.privateKey.length - 50));
 
     // Check if Firebase credentials are properly configured
     if (!serviceAccount.projectId) {
@@ -56,6 +78,7 @@ async function initializeFirebase() {
     } catch (authError) {
       firebaseError = `Firebase authentication failed: ${authError instanceof Error ? authError.message : 'Unknown error'}`;
       console.error('❌ Firebase authentication failed:', firebaseError);
+      console.error('❌ Full error details:', authError);
       throw new Error(firebaseError);
     }
   } catch (error) {

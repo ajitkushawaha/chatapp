@@ -2,6 +2,16 @@ import { NextRequest, NextResponse } from 'next/server';
 import { FirebaseService } from '@/lib/firebase-service';
 import { ChatFlow } from '@/lib/openai';
 
+// Load environment variables
+if (typeof window === 'undefined') {
+  require('dotenv').config({ path: 'env.local' });
+}
+
+// Debug environment variables
+console.log('🔍 API Route Environment Check:');
+console.log('FIREBASE_ADMIN_PROJECT_ID:', process.env.FIREBASE_ADMIN_PROJECT_ID ? 'SET' : 'NOT SET');
+console.log('NODE_ENV:', process.env.NODE_ENV);
+
 // Create FirebaseService instance
 const firebaseService = new FirebaseService();
 
@@ -45,6 +55,7 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   try {
+    // Pass environment variables directly to Firebase service
     const flows = await firebaseService.getFlows();
 
     return NextResponse.json({

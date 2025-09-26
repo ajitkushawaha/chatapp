@@ -24,12 +24,12 @@ export default function Layout({ children, title }: LayoutProps) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="h-screen bg-gray-50 flex overflow-hidden">
       {/* Sidebar */}
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       {/* Content Area */}
-      <div className="flex flex-col flex-1 min-h-screen">
+      <div className="flex flex-col flex-1 h-screen">
         {/* Header */}
         <Header 
           onMenuClick={() => setSidebarOpen(true)} 
@@ -37,8 +37,10 @@ export default function Layout({ children, title }: LayoutProps) {
         />
 
         {/* Main Content */}
-        <main className="flex-1 p-3  overflow-y-auto">
-          {children}
+        <main className="flex-1 overflow-y-auto">
+          <div className="p-6">
+            {children}
+          </div>
         </main>
       </div>
 
