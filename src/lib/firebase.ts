@@ -23,7 +23,9 @@ export const db = getFirestore(app);
 export const storage = getStorage(app);
 export const functions = getFunctions(app);
 
-// Connect to emulators in development
+// Note: Firebase emulators are disabled for production use
+// To enable emulators, uncomment the code below and start Firebase emulators
+/*
 if (process.env.NODE_ENV === 'development' && typeof window !== 'undefined') {
   try {
     // Only connect to emulators if they're not already connected
@@ -43,5 +45,6 @@ if (process.env.NODE_ENV === 'development' && typeof window !== 'undefined') {
     console.log('Firebase emulators already connected or not available');
   }
 }
+*/
 
 export default app;

@@ -3,7 +3,7 @@ import { getFirestore, Timestamp } from 'firebase-admin/firestore';
 
 // Load environment variables for server-side operations
 if (typeof window === 'undefined') {
-  require('dotenv').config({ path: 'env.local' });
+  require('dotenv').config({ path: '.env.local' });
 }
 
 // Initialize Firebase Admin SDK

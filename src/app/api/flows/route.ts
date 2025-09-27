@@ -4,7 +4,7 @@ import { ChatFlow } from '@/lib/openai';
 
 // Load environment variables
 if (typeof window === 'undefined') {
-  require('dotenv').config({ path: 'env.local' });
+  require('dotenv').config({ path: '.env.local' });
 }
 
 // Debug environment variables
